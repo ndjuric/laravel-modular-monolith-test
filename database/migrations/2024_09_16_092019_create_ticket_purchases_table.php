@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('ticket_purchases', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('event_id')->constrained()->onDelete('cascade');
+            $table->string('email');
+            $table->string('transaction_id')->unique();
             $table->timestamps();
         });
     }
