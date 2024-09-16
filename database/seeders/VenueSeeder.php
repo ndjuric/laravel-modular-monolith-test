@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Venue;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class VenueSeeder extends Seeder
 {
@@ -12,14 +12,19 @@ class VenueSeeder extends Seeder
      */
     public function run(): void
     {
-        Venue::create([
-            'name' => 'Main Venue',
-            'capacity' => 150
-        ]);
-
-        Venue::create([
-            'name' => 'Small Venue',
-            'capacity' => 50
+        DB::table('venues')->insert([
+            [
+                'name' => 'Main Venue',
+                'capacity' => 150,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'Small Venue',
+                'capacity' => 50,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
         ]);
     }
 }

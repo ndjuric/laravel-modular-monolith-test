@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Event;
-use App\Models\Venue;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class EventSeeder extends Seeder
 {
@@ -13,21 +13,26 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
-        $mainVenue = Venue::where('name', 'Main Venue')->first();
-        $smallVenue = Venue::where('name', 'Small Venue')->first();
+        $mainVenue = DB::table('venues')->where('name', 'Main Venue')->first();
+        $smallVenue = DB::table('venues')->where('name', 'Small Venue')->first();
 
-        Event::create([
-            'venue_id' => $mainVenue->id,
-            'name' => 'Concert',
-            'available_tickets' => 150,
-            'ticket_sales_end_date' => '2024-09-15 18:00:00'
-        ]);
-
-        Event::create([
-            'venue_id' => $smallVenue->id,
-            'name' => 'Lecture',
-            'available_tickets' => 50,
-            'ticket_sales_end_date' => '2024-10-01 12:00:00'
+        DB::table('events')->insert([
+            [
+                'venue_id' => $mainVenue->id,
+                'name' => 'Concert',
+                'available_tickets' => 150,
+                'ticket_sales_end_date' => Carbon::now()->addDays(10),
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'venue_id' => $smallVenue->id,
+                'name' => 'Lecture',
+                'available_tickets' => 50,
+                'ticket_sales_end_date' => Carbon::yesterday(),
+                'created_at' => Carbon::yesterday(),
+                'updated_at' => Carbon::yesterday()
+            ]
         ]);
     }
 }
