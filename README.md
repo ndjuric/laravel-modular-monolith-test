@@ -2,12 +2,20 @@
 
 This repository serves as a test for hiring PHP/Laravel developers. The goal is to implement a ticket sale system using a modular monolith architecture in Laravel. Authentication logic is not required to be implemented. The system manages venues, events, and ticket sales, with a focus on modular design to facilitate easy maintenance and scalability.
 
-You can use the pre-installed Laravel Modules package to create modules. Detailed instructions for using this package can be found [here](https://laravelmodules.com/docs/v10/creating-a-module).
+You can use the pre-installed Laravel Modules package to create modules. New modules will be placed in the `Modules/` folder. Detailed instructions for using this package can be found [here](https://laravelmodules.com/docs/v10/creating-a-module).
 
 The repository includes pre-built migrations and seeders for venues and events. To set up the database, run the migrations and seeders with the following commands:
 ```bash
 php artisan migrate
 php artisan db:seed
+```
+Additionally, you are required to write feature tests to ensure that the core functionality, such as listing events and purchasing tickets, works as expected. Tests should cover:
+
+- Listing events with available tickets
+- Purchasing tickets (including error handling for duplicate emails and sold-out events)
+Feature tests should be written using Laravel's built-in testing framework, and can be run using the following command:
+```bash
+php artisan test
 ```
 
 ### Task Description
@@ -52,9 +60,9 @@ Example of a Successful Response:
         ```
     - Successful Response (200):
       ```json
-        {
-            "transaction_id": ""
-        }
+      {
+          "transaction_id": ""
+      }
       ```
     - Error Response (400):
       - Email already used:
