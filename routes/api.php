@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Event\Http\Controllers\EventController;
+use Modules\Payment\Http\Controllers\PaymentController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/events/{event_id}/purchase', [PaymentController::class, 'process']);
+Route::get('/events', [EventController::class, 'index']);
+Route::post('/events/{event_id}/purchase', [PaymentController::class, 'purchase']);
