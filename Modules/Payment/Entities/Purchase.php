@@ -2,9 +2,9 @@
 
 namespace Modules\Payment\Entities;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Event\Entities\Event;
+use Illuminate\Database\Eloquent\Model;
+use Modules\Payment\Database\Factories\PurchaseFactory;
 
 class Purchase extends Model
 {
@@ -14,6 +14,11 @@ class Purchase extends Model
 
     public function event()
     {
-        return $this->belongsTo(Event::class);
+        return $this->belongsTo('Modules\Event\Entities\Event');
+    }
+
+    protected static function newFactory()
+    {
+        return PurchaseFactory::new();
     }
 }
