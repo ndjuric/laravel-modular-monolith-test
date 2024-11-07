@@ -22,6 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/events/{event_id}/purchase', [PaymentController::class, 'process']);
 Route::get('/events', [EventController::class, 'index']);
 Route::post('/events/{event_id}/purchase', [PaymentController::class, 'purchase']);
