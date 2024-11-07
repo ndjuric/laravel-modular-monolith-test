@@ -20,7 +20,7 @@ class EventSeeder extends Seeder
             [
                 'venue_id' => $mainVenue->id,
                 'name' => 'Concert',
-                'available_tickets' => 150,
+                // 'available_tickets' => 150,
                 'ticket_sales_end_date' => Carbon::now()->addDays(10),
                 'created_at' => now(),
                 'updated_at' => now()
@@ -28,7 +28,7 @@ class EventSeeder extends Seeder
             [
                 'venue_id' => $smallVenue->id,
                 'name' => 'Lecture',
-                'available_tickets' => 50,
+                // 'available_tickets' => 50,
                 'ticket_sales_end_date' => Carbon::yesterday(),
                 'created_at' => Carbon::yesterday(),
                 'updated_at' => Carbon::yesterday()

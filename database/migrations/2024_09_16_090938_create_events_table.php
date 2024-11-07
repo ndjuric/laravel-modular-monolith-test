@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('venue_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->integer('available_tickets');
+            // REFERENCE: SOLUTION.md
+            // $table->integer('available_tickets');
             $table->dateTime('ticket_sales_end_date');
             $table->timestamps();
         });
