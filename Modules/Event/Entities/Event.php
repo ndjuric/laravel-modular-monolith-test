@@ -21,6 +21,17 @@ class Event extends Model
         return $this->belongsTo('Modules\Venue\Entities\Venue');
     }
 
+    public function purchases()
+    {
+        return $this->hasMany('Modules\Payment\Entities\Purchase');
+    }
+
+    public function getAvailableTicketsAttribute()
+    {
+        $soldTickets = $this->purchases()->count();
+        return $this->venue->capacity - $soldTickets;
+    }
+
     protected static function newFactory()
     {
         
