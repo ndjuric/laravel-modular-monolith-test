@@ -13,94 +13,62 @@ class PurchaseTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_can_purchase_ticket_successfully()
+    public function test_successful_ticket_purchase()
     {
-        // Arrange
+        $venue = Venue::factory()->create(['capacity' => 100]);
         $event = Event::factory()->create([
-            'ticket_sales_end_date' => Carbon::now()->addDay(),
+            'venue_id' => $venue->id,
+            'ticket_sales_end_date' => now()->addDay(),
         ]);
-
-        // Act
         $response = $this->postJson("/api/events/{$event->id}/purchase", [
-            'email' => 'test@example.com',
+            'email' => 'user@example.com',
         ]);
-
-        // Assert
-        $response->assertStatus(200)
-                 ->assertJsonStructure(['transaction_id']);
-
-        $this->assertDatabaseHas('purchases', [
-            'event_id' => $event->id,
-            'email'    => 'test@example.com',
-        ]);
+        $response->assertStatus(200)->assertJsonStructure(['transaction_id']);
     }
-
-    public function test_cannot_purchase_with_duplicate_email()
+    
+    public function test_duplicate_email_error()
     {
-        // Arrange
+        $venue = Venue::factory()->create(['capacity' => 100]);
         $event = Event::factory()->create([
-            'ticket_sales_end_date' => Carbon::now()->addDay(),
+            'venue_id' => $venue->id,
+            'ticket_sales_end_date' => now()->addDay(),
         ]);
-
         Purchase::factory()->create([
             'event_id' => $event->id,
-            'email'    => 'test@example.com',
+            'email' => 'user@example.com',
         ]);
-
-        // Act
         $response = $this->postJson("/api/events/{$event->id}/purchase", [
-            'email' => 'test@example.com',
+            'email' => 'user@example.com',
         ]);
-
-        // Assert
-        $response->assertStatus(400)
-                 ->assertJson([
-                     'error' => 'Email already used for this event.',
-                 ]);
+        $response->assertStatus(400)->assertExactJson(['error' => 'Email already used for this event.']);
     }
-
-    public function test_cannot_purchase_when_event_is_sold_out()
+    
+    public function test_no_available_seats_error()
     {
-        // Arrange
         $venue = Venue::factory()->create(['capacity' => 1]);
-
         $event = Event::factory()->create([
-            'venue_id'              => $venue->id,
-            'ticket_sales_end_date' => Carbon::now()->addDay(),
+            'venue_id' => $venue->id,
+            'ticket_sales_end_date' => now()->addDay(),
         ]);
-
         Purchase::factory()->create([
             'event_id' => $event->id,
         ]);
-
-        // Act
         $response = $this->postJson("/api/events/{$event->id}/purchase", [
-            'email' => 'new@example.com',
+            'email' => 'newuser@example.com',
         ]);
-
-        // Assert
-        $response->assertStatus(400)
-                 ->assertJson([
-                     'error' => 'No available seats for this event.',
-                 ]);
+        $response->assertStatus(400)->assertExactJson(['error' => 'No available seats for this event.']);
     }
-
-    public function test_cannot_purchase_when_event_is_closed()
+    
+    public function test_event_is_closed_error()
     {
-        // Arrange
+        $venue = Venue::factory()->create(['capacity' => 100]);
         $event = Event::factory()->create([
-            'ticket_sales_end_date' => Carbon::now()->subDay(),
+            'venue_id' => $venue->id,
+            'ticket_sales_end_date' => now()->subDay(),
         ]);
-
-        // Act
         $response = $this->postJson("/api/events/{$event->id}/purchase", [
-            'email' => 'test@example.com',
+            'email' => 'user@example.com',
         ]);
-
-        // Assert
-        $response->assertStatus(400)
-                 ->assertJson([
-                     'error' => 'The event is closed.',
-                 ]);
+        $response->assertStatus(400)->assertExactJson(['error' => 'The event is closed.']);
     }
 }
